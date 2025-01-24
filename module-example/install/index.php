@@ -1,22 +1,24 @@
 <?php
 
-use Bitrix\Main\Config\Option;
-use Bitrix\Main\Localization\Loc;
-use Bitrix\Main\EventManager;
-use Bitrix\Main\ModuleManager;
 use Bitrix\Main\Application;
+use Bitrix\Main\Config\Option;
+use Bitrix\Main\EventManager;
+use Bitrix\Main\IO\Directory;
+use Bitrix\Main\Loader;
+use Bitrix\Main\Localization\Loc;
+use Bitrix\Main\ModuleManager;
 use Bitrix\Main\Request;
 use Bitrix\Main\Server;
 
 Loc::loadMessages(__FILE__);
 
-if (class_exists('dbogdanoff_example')) {
+if (class_exists('dvtoid_example')) {
     return;
 }
 
-class dbogdanoff_example extends CModule
+class dvtoid_example extends CModule
 {
-    public $MODULE_ID = 'dbogdanoff.example';
+    public $MODULE_ID = 'dvtoid.example';
     public $MODULE_VERSION;
     public $MODULE_VERSION_DATE;
     public $MODULE_NAME;
@@ -58,24 +60,29 @@ class dbogdanoff_example extends CModule
             return false;
         }
 
-        $this->InstallDB();
-        $this->InstallEvents();
-        $this->InstallFiles();
+        try {
+            Loader::includeModule($this->MODULE_ID);
 
-        ModuleManager::registerModule($this->MODULE_ID);
+            $this->InstallDB();
+            $this->InstallEvents();
+            $this->InstallFiles();
 
-        return true;
+            ModuleManager::registerModule($this->MODULE_ID);
+
+            return true;
+
+        } catch (Exception $e) {
+            $APPLICATION->ThrowException(Loc::getMessage('#MESS#_INSTALL_ERROR', ['#ERROR#', $e->getMessage()]));
+            return false;
+        }
     }
 
-    /**
-     * @throws Exception
-     */
-    public function DoUninstall()
+    public function DoUninstall(): void
     {
         global $APPLICATION, $step, $obModule;
 
         if ($step < 2) {
-            $APPLICATION->IncludeAdminFile(GetMessage('#MESS#_INSTALL_TITLE'), __DIR__ . '/unstep1.php');
+            $APPLICATION->IncludeAdminFile(GetMessage('#MESS#_UNINSTALL_TITLE'), __DIR__ . '/unstep1.php');
         } elseif ($step == 2) {
             $GLOBALS['CACHE_MANAGER']->CleanAll();
             ModuleManager::unRegisterModule($this->MODULE_ID);
@@ -85,51 +92,93 @@ class dbogdanoff_example extends CModule
             $this->UnInstallFiles();
 
             $obModule = $this;
-            $APPLICATION->IncludeAdminFile(GetMessage('#MESS#_INSTALL_TITLE'), __DIR__ . '/unstep2.php');
+            $APPLICATION->IncludeAdminFile(GetMessage('#MESS#_UNINSTALL_TITLE'), __DIR__ . '/unstep2.php');
         }
     }
 
     public function InstallDB($arParams = []): bool
     {
+        /*
+        global $APPLICATION;
+
+        try {
+            $db = Application::getConnection();
+
+            $exampleTableName = ExampleTable::getTableName();
+            if (!$db->isTableExists($exampleTableName)) {
+                ExampleTable::getEntity()->createDbTable();
+                $db->createIndex($exampleTableName, 'SOME_ID', 'SOME_ID');
+            }
+
+        } catch (Exception $e) {
+            $APPLICATION->ThrowException(Loc::getMessage('#MESS#_INSTALL_ERROR', ['#ERROR#', $e->getMessage()]));
+            return false;
+        }
+        */
+
         return true;
     }
 
-    /**
-     * @throws Exception
-     */
     public function UnInstallDB($arParams = []): bool
     {
-        Option::delete($this->MODULE_ID);
+        /*
+        global $APPLICATION;
+
+        try {
+            Loader::includeModule($this->MODULE_ID);
+
+            Option::delete($this->MODULE_ID);
+
+            $db = Application::getConnection();
+            $db->dropTable(ExampleTable::getTableName());
+
+            CAgent::RemoveModuleAgents($this->MODULE_ID);
+
+        } catch (Exception) {
+            $APPLICATION->ThrowException(Loc::getMessage('#MESS#_INSTALL_ERROR', ['#ERROR#', $e->getMessage()]));
+            return false;
+        }
+        */
+
         return true;
     }
 
     public function InstallEvents(): bool
     {
-        // Include module
-        EventManager::getInstance()->registerEventHandler('main', 'OnPageStart', $this->MODULE_ID);
+        $em = EventManager::getInstance();
+        $em->registerEventHandler('main', 'OnPageStart', $this->MODULE_ID);
+        //$em->registerEventHandler('rest', 'OnRestServiceBuildDescription', $this->MODULE_ID, 'Dvtoid\Example\Rest', 'OnRestServiceBuildDescription');
         return true;
     }
 
     public function UnInstallEvents(): bool
     {
-        // Include module
-        EventManager::getInstance()->unRegisterEventHandler('main', 'OnPageStart', $this->MODULE_ID);
+        $em = EventManager::getInstance();
+        $em->unRegisterEventHandler('main', 'OnPageStart', $this->MODULE_ID);
+        //$em->unRegisterEventHandler('rest', 'OnRestServiceBuildDescription', $this->MODULE_ID, 'Dvtoid\Example\\Rest', 'OnRestServiceBuildDescription');
         return true;
     }
 
     public function InstallFiles($arParams = []): bool
     {
-        CopyDirFiles(__DIR__ . '/admin/', $this->server->getDocumentRoot() . '/bitrix/admin', true, true);
+        $root = $this->server->getDocumentRoot();
+
+        CopyDirFiles(__DIR__ . '/admin/', $root . '/bitrix/admin', true, true);
+        CopyDirFiles(__DIR__ . "/themes", $root . "/bitrix/themes", true, true);
+        CopyDirFiles(__DIR__ . "/js/", $root . "/bitrix/js/", true, true);
+
         return true;
     }
 
     public function UnInstallFiles(): bool
     {
-        /*
-         * Нужно самостоятельно, внимательно написать удаление скопированных файлов
-         * DeleteDirFilesEx – Удаляет рекурсивно указанный каталог (файл)
-         * DeleteDirFiles – Удаляет из каталога все файлы, которые содержатся в другом каталоге. Функция не работает рекурсивно.
-         */
+        $root = $this->server->getDocumentRoot();
+
+        DeleteDirFiles(__DIR__ . "/admin/", $root . "/bitrix/admin/");
+        DeleteDirFiles(__DIR__ . "/themes/.default", $root . "/bitrix/themes/.default");
+        Directory::deleteDirectory($root . "/bitrix/themes/.default/icons/" . $this->MODULE_ID . "/");
+        Directory::deleteDirectory($root . "/bitrix/js/" . $this->MODULE_ID . "/");
+
         return true;
     }
 

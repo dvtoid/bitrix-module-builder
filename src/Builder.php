@@ -32,6 +32,7 @@ class Builder extends Repository
     {
         // Поиск пути до корня модуля и вызов родительского конструктора
         parent::__construct($this->findModuleDir(__DIR__));
+
         // Создаём директорию куда будут складываться архивы обновлений
         $this->createVersionsDirectory();
     }
@@ -54,10 +55,10 @@ class Builder extends Repository
         // Путь на уровень выше
         $path = realpath($baseDir . '/..');
 
-        // Один из способов определения корня модуля по композеру с bitrix-version-builder
+        // Один из способов определения корня модуля по композеру с bitrix-module-builder
         $composer = false;
         if (file_exists($path . '/composer.json')) {
-            $composer = strpos(file_get_contents($path . '/composer.json'), 'bitrix-version-builder') !== false;
+            $composer = strpos(file_get_contents($path . '/composer.json'), 'bitrix-module-builder') !== false;
         }
 
         // Второй способ – это наличие файла version.php
@@ -78,7 +79,7 @@ class Builder extends Repository
     /**
      * Возвращает два промежуточных хеша, чтобы в дальнейшем межжду ними по diff можно было вытащить изменённые файлы
      * Все возможные варианты поиска хешей описаны в issue:
-     *     https://github.com/denx-b/bitrix-version-builder/issues/4#issuecomment-1037250826
+     *     https://github.com/dvtoid/bitrix-module-builder/issues/4#issuecomment-1037250826
      *
      * Также в методе определяется название архива обновления, вариантов два: .last_version.zip или 0.0.0.zip
      * Если в истории git есть хотябы один тег, архив именуется 0.0.0.zip, если тегов нет, то .last_version.zip
@@ -293,7 +294,7 @@ class Builder extends Repository
      */
     public function getExcludeMask(): array
     {
-        return ['.last_version', '.versions', 'bitrix-version-builder', '.gitignore', '.idea', 'vendor', 'composer', 'DS_Store', 'README.md'];
+        return ['.last_version', '.versions', 'bitrix-module-builder', '.gitignore', '.idea', 'vendor', 'composer', 'DS_Store', 'README.md'];
     }
 
     /**

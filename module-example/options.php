@@ -1,5 +1,9 @@
 <?php
 
+use Bitrix\Main\Config\Option;
+use Bitrix\Main\Context;
+use Bitrix\Main\Localization\Loc;
+
 /**
  * @global CUser $USER
  * @global CMain $APPLICATION
@@ -10,13 +14,14 @@
  */
 
 // Проверка прав
+
 $modulePerms = $APPLICATION->GetGroupRight($mid);
 if ($modulePerms < 'R') {
     return;
 }
 
-\Bitrix\Main\Localization\Loc::loadMessages($_SERVER['DOCUMENT_ROOT'] . '/bitrix/modules/main/options.php');
-\Bitrix\Main\Localization\Loc::loadMessages(__FILE__);
+Loc::loadMessages($_SERVER['DOCUMENT_ROOT'] . '/bitrix/modules/main/options.php');
+Loc::loadMessages(__FILE__);
 
 // Получение конфигурации табов и опций
 $tabsConf = require __DIR__ . '/options_conf.php';
@@ -32,11 +37,11 @@ foreach ($tabsConf as $key => $arTab) {
 $tabControl = new CAdminTabControl('tabControl', $arTabs);
 
 // Сохранение значений
-$request = \Bitrix\Main\Context::getCurrent()->getRequest();
+$request = Context::getCurrent()->getRequest();
 if($request->isPost() && $Update.$Apply.$RestoreDefaults <> '' && $modulePerms === 'W' && check_bitrix_sessid())
 {
     if (strlen($RestoreDefaults) > 0) {
-        \Bitrix\Main\Config\Option::delete($mid);
+        Option::delete($mid);
     } else {
         foreach ($arAllOptions as $arOption) {
             $name = $arOption['name'];
@@ -47,7 +52,7 @@ if($request->isPost() && $Update.$Apply.$RestoreDefaults <> '' && $modulePerms =
             if ($arOption['type'] === 'checkbox' && $val !== 'Y') {
                 $val = 'N';
             }
-            \Bitrix\Main\Config\Option::set($mid, $name, $val);
+            Option::set($mid, $name, $val);
         }
     }
     if (strlen($Update) > 0 && strlen($request->get('back_url_settings')) > 0) {
@@ -75,7 +80,7 @@ $tabControl->Begin();
             } elseif ($arOption['type'] === 'message') {
                 ?><tr><td colspan="2" align="center"><div class="adm-info-message-wrap" align="center"><div class="adm-info-message"><?=$arOption['message']?></div></div></td></tr><?php
             } else {
-                $val = \Bitrix\Main\Config\Option::get($mid, $arOption['name'], $arOption['value']) ?: $arOption['value'];
+                $val = Option::get($mid, $arOption['name'], $arOption['value']) ?: $arOption['value'];
                 ?>
                 <tr>
                     <td width="50%" class="adm-detail-content-cell-l" nowrap<?= $arOption['type'] === 'textarea' ? ' class="adm-detail-valign-top"' : '' ?>>

@@ -20,7 +20,7 @@ return [
                 'type' => 'text',
                 'name' => 'name',
                 'title' => Loc::getMessage('#MESS#_TEXT'),
-                'value' => 'Denis',
+                'value' => '',
             ],
             [
                 'type' => 'list',

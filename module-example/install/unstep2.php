@@ -1,5 +1,7 @@
 <?php
 
+global $APPLICATION;
+
 if (!check_bitrix_sessid()) {
     return;
 }

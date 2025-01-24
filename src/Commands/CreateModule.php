@@ -11,26 +11,23 @@ use VersionBuilder\Builder;
 
 class CreateModule extends Command
 {
-    // the name of the command (the part after "bin/console")
     protected static $defaultName = 'bitrix:create-module';
 
-    /** @var Builder */
-    protected $builder;
+    protected Builder $builder;
 
-    /** @var QuestionHelper */
-    protected $questionHelper;
+    protected QuestionHelper $questionHelper;
 
-    protected $vendor = 'bitrix';
+    protected string $vendor = 'bitrix';
 
-    protected $module = 'iblock';
+    protected string $module = 'iblock';
 
-    protected $moduleNameRu = '';
+    protected string $moduleNameRu = '';
 
-    protected $moduleDescriptionRu = '';
+    protected string $moduleDescriptionRu = '';
 
-    protected $partnerName = 'bitrix';
+    protected string $partnerName = 'bitrix';
 
-    protected $partnerWebSite = 'https://1c-bitrix.ru/';
+    protected string $partnerWebSite = 'https://1c-bitrix.ru/';
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
@@ -85,6 +82,7 @@ class CreateModule extends Command
             $path = realpath($dir . DIRECTORY_SEPARATOR . $value);
             $rp = realpath(__DIR__ . '/../../module-example/');
             $np = str_replace($rp, $this->builder->getPath(), $path);
+            $np = str_replace('dvtoid.example', $this->vendor . '.' . $this->module, $np);
             if (is_dir($path)) {
                 // Создание раздела
                 if ($value !== "." && $value !== "..") {
@@ -100,8 +98,9 @@ class CreateModule extends Command
                 // Создание файла
                 $arReplace = [
                     '#MESS#' => strtoupper($this->vendor) . '_' . strtoupper($this->module),
-                    'dbogdanoff_example' => $this->vendor . '_' . $this->module,
-                    'dbogdanoff.example' => $this->vendor . '.' . $this->module,
+                    'dvtoid_example' => $this->vendor . '_' . $this->module,
+                    'dvtoid.example' => $this->vendor . '.' . $this->module,
+                    'Dvtoid\Example' => ucfirst($this->vendor) . '\\' . ucfirst($this->module),
                     '2019-12-04 19:00:00' => date('Y-m-d H:i:s'),
                     'name_ru' => $this->moduleNameRu,
                     'desc_ru' => $this->moduleDescriptionRu,

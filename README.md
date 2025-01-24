@@ -1,4 +1,4 @@
-## Bitrix Version Builder
+## Bitrix Module Builder
 
 Библиотека берёт на себя рутинную работу по **генерации базовой структуры** и **сборке обновлений** модулей 1С-Битрикс:
 - автоматическое создание структуры модуля;
@@ -10,7 +10,7 @@
 ### Использование
 Установка библиотеки из composer:
 ```sh
-composer require denx-b/bitrix-version-builder
+composer require dvtoid/bitrix-module-builder
 ```
 
 Обязательно в корне модуля должен быть git:
@@ -75,7 +75,7 @@ aspro.max/
 
 <img src="https://dbogdanoff.ru/upload/bitrix-version-builder-1010.jpeg" alt="bitrix:version-build" width="700"/>
 
-[Подробнее](https://github.com/denx-b/bitrix-version-builder/issues/4) о попадании файлов в архив и именовании архива.
+[Подробнее](https://github.com/dvtoid/bitrix-module-builder/issues/4) о попадании файлов в архив и именовании архива.
 
 ### epilog_after.php
 Развивайте ваш модуль, комитьте, фокусируйтесь на задаче, а рутинную работу возложите на сборщик! Как будете готовы к публикации новой версии, сново просто выполните команду `./vendor/bin/console bitrix:version-build`
