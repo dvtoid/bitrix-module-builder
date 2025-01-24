@@ -17,7 +17,7 @@ return [
         'text' => Loc::getMessage('#MESS#_MENU_TEXT'),
         'title' => Loc::getMessage('#MESS#_MENU_TITLE'),
         'items_id' => 'dvtoid_example_menu',
-        'icon' => '/bitrix/themes/.default/icons/dvtoid.example/logo.svg',
+        'icon' => 'dvtoid_example_menu_icon',
         'page_icon' => 'dvtoid_example_menu_icon',
         'sort' => '10000',
         'items' => [
