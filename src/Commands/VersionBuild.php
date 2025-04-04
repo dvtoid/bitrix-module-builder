@@ -16,7 +16,7 @@ class VersionBuild extends Command
      * @param OutputInterface $output
      * @return int|void
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         try {
             $builder = new \VersionBuilder\Builder();

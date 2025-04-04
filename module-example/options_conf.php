@@ -1,56 +1,131 @@
 <?php
 
+use Bitrix\Main\Loader;
 use Bitrix\Main\Localization\Loc;
 
 Loc::loadMessages(dirname(__FILE__) . '/options.php');
 
-return [
-    'edit1' => [
-        'TAB_NAME' => Loc::getMessage('#MESS#_TAB'),
-        'TAB_TITLE' => Loc::getMessage('#MESS#_TITLE'),
+$options = [
+    [
+        'DIV' => 'settings-tab',
+        'TAB' => Loc::getMessage('#MESS#_TAB'),
+        'TITLE' => Loc::getMessage('#MESS#_TITLE'),
         'ICON' => '',
-        'options' => [
-            [
-                'type' => 'checkbox',
-                'name' => 'active',
-                'title' => Loc::getMessage('#MESS#_ACTIVE'),
-                'value' => 'N',
+        'GROUPS' => [
+            'GROUP_1' => [
+                'TITLE' => Loc::getMessage('#MESS#_GROUP_1'),
+                'OPTIONS' => [
+                    'ACTIVE' => [
+                        'SORT' => 100,
+                        'TYPE' => 'CHECKBOX',
+                        'FIELDS' => [
+                            'TITLE' => Loc::getMessage('#MESS#_ACTIVE'),
+                            'DEFAULT' => 'N',
+                        ],
+                    ],
+                    'TEXT' => [
+                        'SORT' => 200,
+                        'TYPE' => 'STRING',
+                        'FIELDS' => [
+                            'TITLE' => Loc::getMessage('#MESS#_TEXT'),
+                            'DEFAULT' => '',
+                            'PLACEHOLDER' => Loc::getMessage('#MESS#_TEXT'),
+                            'TAG' => Loc::getMessage('#MESS#_TEXT_TAG'),
+                            'NOTES' => Loc::getMessage('#MESS#_TEXT_NOTE'),
+                            'READONLY' => false,
+                            'DISABLED' => false,
+                            'AUTOCOMPLETE' => false,
+                        ],
+                    ],
+                    'DROPDOWN' => [
+                        'SORT' => 300,
+                        'TYPE' => 'DROPDOWN',
+                        'FIELDS' => [
+                            'TITLE' => Loc::getMessage('#MESS#_DROPDOWN'),
+                            'DEFAULT' => '2',
+                            'OPTIONS' => [
+                                [
+                                    'TITLE' => 'One',
+                                    'VALUE' => '1',
+                                ],
+                                [
+                                    'TITLE' => 'Two',
+                                    'VALUE' => '2',
+                                ],
+                                [
+                                    'TITLE' => 'Three',
+                                    'VALUE' => '3',
+                                ],
+                            ],
+                        ],
+                    ],
+                    'MULTISELECT' => [
+                        'SORT' => 400,
+                        'TYPE' => 'MULTISELECT',
+                        'FIELDS' => [
+                            'TITLE' => Loc::getMessage('#MESS#_MULTISELECT'),
+                            'DEFAULT' => serialize(['1', '3']),
+                            'OPTIONS' => [
+                                [
+                                    'TITLE' => 'One',
+                                    'VALUE' => '1',
+                                ],
+                                [
+                                    'TITLE' => 'Two',
+                                    'VALUE' => '2',
+                                ],
+                                [
+                                    'TITLE' => 'Three',
+                                    'VALUE' => '3',
+                                ],
+                            ],
+                        ],
+                    ],
+                ]
             ],
-            [
-                'type' => 'text',
-                'name' => 'name',
-                'title' => Loc::getMessage('#MESS#_TEXT'),
-                'value' => '',
-            ],
-            [
-                'type' => 'list',
-                'name' => 'someList',
-                'title' => Loc::getMessage('#MESS#_SOMELIST'),
-                'value' => '1',
-                'list' => [
-                    '1' => 'Понедельник',
-                    '2' => 'Вторник',
-                    '3' => 'Среда',
-                    '4' => 'Четверг',
-                    '5' => 'Пятница',
-                    '6' => 'Суббота',
-                    '7' => 'Воскресенье'
-                ],
-            ],
-            [
-                'type' => 'message',
-                'message' => Loc::getMessage('#MESS#_MESSAGE'),
-            ],
-            [
-                'type' => 'heading',
-                'heading' => Loc::getMessage('#MESS#_HEADING'),
-            ],
-            [
-                'type' => 'textarea',
-                'name' => 'message',
-                'title' => Loc::getMessage('#MESS#_TEXTAREA'),
-                'value' => 'Text here...',
-            ],
-        ]
-    ],
+            'GROUP_2' => [
+                'TITLE' => Loc::getMessage('#MESS#_GROUP_2'),
+                'OPTIONS' => [
+                    'ALERT' => [
+                        'TYPE' => 'ALERT',
+                        'FIELDS' => [
+                            'TITLE' => Loc::getMessage('#MESS#_ALERT'),
+                        ],
+                        'PARAMS' => [
+                            'DISPLAY' => true,
+                            'HEIGHT' => false,
+                            'COLOR' => 'warning',
+                            'ICON' => 'warning',
+                        ]
+                    ],
+                ]
+            ]
+        ],
+    ]
 ];
+
+if (Loader::includeModule('fileman')) {
+    $options[0]['GROUPS']['GROUP_2']['OPTIONS']['HTML'] = [
+        'TYPE' => 'HTMLEDITOR',
+        'FIELDS' => [
+            'TITLE' => Loc::getMessage('#MESS#_HTML'),
+        ],
+        'PARAMS' => [
+            'WIDTH' => '100%',
+            'HEIGHT' => '500',
+            'PHP' => false,
+            'TASKBAR' => false,
+        ]
+    ];
+}
+
+if (Loader::includeModule('catalog')) {
+    $options[0]['GROUPS']['GROUP_2']['OPTIONS']['CONDITIONS'] = [
+        'TYPE' => 'CONDITIONS',
+        'FIELDS' => [
+            'TITLE' => Loc::getMessage('#MESS#_CONDITIONS'),
+        ]
+    ];
+}
+
+return $options;
