@@ -5,8 +5,8 @@ include $_composer_autoload_path ?? __DIR__ . '/../vendor/autoload.php';
 
 $application = new \Symfony\Component\Console\Application();
 
-$application->add(new \VersionBuilder\Commands\CreateModule());
-$application->add(new \VersionBuilder\Commands\VersionBuild());
+$application->add(new \VersionBuilder\Commands\CreateModule('bitrix:create-module'));
+$application->add(new \VersionBuilder\Commands\VersionBuild('bitrix:version-build'));
 
 try {
     $application->run();

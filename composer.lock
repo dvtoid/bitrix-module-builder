@@ -4,8 +4,51 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b4fa34ebcdd3ee30f5027017c8e1887c",
+    "content-hash": "91791f119de230bee71022c668b88e87",
     "packages": [
+        {
+            "name": "ge1i0n/bitrix-options",
+            "version": "1.4.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Ge1i0N/bitrix-options.git",
+                "reference": "f88c0be0ab08ef0b6d23b24f25ca9bf78a17e9a7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Ge1i0N/bitrix-options/zipball/f88c0be0ab08ef0b6d23b24f25ca9bf78a17e9a7",
+                "reference": "f88c0be0ab08ef0b6d23b24f25ca9bf78a17e9a7",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Gelion\\BitrixOptions\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Sevalnev Gennadiy",
+                    "email": "gennadiy.sevalnev@mail.ru"
+                }
+            ],
+            "homepage": "https://github.com/ge1i0n/bitrix-options",
+            "keywords": [
+                "bitrix"
+            ],
+            "support": {
+                "issues": "https://github.com/Ge1i0N/bitrix-options/issues",
+                "source": "https://github.com/Ge1i0N/bitrix-options/tree/1.4.1"
+            },
+            "time": "2023-02-22T13:42:43+00:00"
+        },
         {
             "name": "gitonomy/gitlib",
             "version": "v1.5.0",
